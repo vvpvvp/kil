@@ -103,7 +103,22 @@ module.exports = {
         }
 
         if (pack_config.devServer && pack_config.devServer.proxy) {
-            serverCfg.proxy = pack_config.devServer.proxy;
+            var _proxy = pack_config.devServer.proxy;
+            serverCfg.proxy = {};
+            for(var key of Object.keys(_proxy)){
+                var proxyConfig = _proxy[key];
+                if(proxyConfig.rewrite){
+                    proxyConfig.rewriteString = proxyConfig.rewrite;
+                    proxyConfig.rewrite = function(req){
+                        req.url = req.url.replace(proxyConfig.rewriteString, '');
+                    }
+                }
+                if(typeof(proxyConfig)=="object"){
+                    proxyConfig.toProxy = true;
+                    proxyConfig.changeOrigin = true;
+                }
+                serverCfg.proxy[key] = proxyConfig;
+            }
         }
 
         if (config.getHtml5Mode()) {
@@ -113,7 +128,7 @@ module.exports = {
         logger.debug('webpack dev server start with config: ');
         logger.debug(serverCfg);
 
-        new WebpackDevServer(compiler, serverCfg).listen(config.getPort(), 'localhost', (err) => {
+        new WebpackDevServer(compiler, serverCfg).listen(config.getPort(), '0.0.0.0', (err) => {
             if (err) {
                 logger.error(err);
                 process.exit(1);
@@ -183,8 +198,9 @@ module.exports = {
         var pack_config = utils.loadWebpackCfg('release', args);
 
         logger.info('start build project... ');
-
+        // console.log(pack_config);
         var compiler = webpack(pack_config);
+        if(!args.root)args.root="dist";
         compiler.run((err, stats) => {
             if (err) {
                 logger.error(err);
@@ -202,7 +218,7 @@ module.exports = {
                 conf.copy.forEach((key) => {
                     let files = glob.sync(key);
                     files.forEach((file) => {
-                        fs.copySync(file, `dist/${file}`);
+                        fs.copySync(file, `${args.root}/${file}`);
                     })
                 })
             }
