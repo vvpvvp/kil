@@ -1,6 +1,6 @@
 {
   "name": "killl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "kil is a tool based on nodejs and webpack, it helps improve the develop, test and release on web apps",
   "keywords": "module bundler, js develop tools, frontend, web, test",
   "main": "index.js",
@@ -28,7 +28,7 @@
     "babel-polyfill": "^6.3.14",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
-    "babel-runtime": "^5.8.0",
+    "babel-runtime": "^6.0.0",
     "colorful": "^2.1.0",
     "commander": "^2.9.0",
     "cross-spawn": "^2.1.5",
