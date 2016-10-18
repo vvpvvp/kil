@@ -7,6 +7,8 @@ var path = require('path'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     conf;
 
+var fs = require('fs');
+
 const DEFAULT = require('./default/package.default.js');
 
 class Config {
@@ -38,6 +40,7 @@ class Config {
      * @return {[Object]}
      *         System Config
      */
+
     loadPackageConfig(args) {
         if (conf) {
             return conf;
@@ -114,6 +117,8 @@ class Config {
                         }
                     }
                     depends.push(file.replace('.html', ''));
+                    // console.log(depends);
+                    // writeFile(file);
                     var plugin_obj = {
                         template: name,
                         filename: file,

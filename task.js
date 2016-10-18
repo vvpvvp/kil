@@ -9,6 +9,8 @@ var spawn = require('cross-spawn'),
     logger = require('./logger');
 
 var webpack = require('webpack');
+// 加载编码转换模块  
+var iconv = require('iconv-lite'); 
 
 module.exports = {
 
@@ -107,12 +109,18 @@ module.exports = {
             serverCfg.proxy = {};
             for(var key of Object.keys(_proxy)){
                 var proxyConfig = _proxy[key];
-                if(proxyConfig.rewrite){
-                    proxyConfig.rewriteString = proxyConfig.rewrite;
-                    proxyConfig.rewrite = function(req){
-                        req.url = req.url.replace(proxyConfig.rewriteString, '');
-                    }
-                }
+                // if(proxyConfig.rewrite){
+                //     proxyConfig.rewriteString = proxyConfig.rewrite;
+                //     // proxyConfig.rewrite = function(req){
+                //     //     req.url = req.url.replace(proxyConfig.rewriteString, '');
+                //     // }
+
+                //     proxyConfig.onProxyReq = function (proxyReq, req, res) {
+                //         if(req.path.indexOf(proxyConfig.rewriteString) === 0) {
+                //             proxyReq
+                //         }
+                //     }
+                // }
                 if(typeof(proxyConfig)=="object"){
                     proxyConfig.toProxy = true;
                     proxyConfig.changeOrigin = true;
@@ -224,6 +232,20 @@ module.exports = {
             }
 
             logger.info('build successfully. ');
+
+
+            var writeFile = function(file){
+                var str = "<script>console.log('"+args.headVersion+"')</script>";  
+                var arr = iconv.encode(str, 'utf8'); 
+                fs.appendFile(file, arr, function(err){  
+                    if(err)  
+                        console.log("fail " + err);
+                });  
+            }
+            let files = glob.sync(`${args.root}/index.html`);
+            files.forEach((file) => {
+                writeFile(file);
+            })
 
             if (after && typeof after === "function") {
                 after();
