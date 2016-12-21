@@ -1,4 +1,5 @@
 'use strict';
+var os = require('os');  
 
 var path = require('path'),
     fs = require('fs'),
@@ -65,8 +66,17 @@ class Utils {
                 }
             }));
 
-            pack_config.output.publicPath = `http://localhost:${config.getPort()}/`;
+            // pack_config.output.publicPath = '/assets/';
 
+            var IPv4 = "localhost";  
+            if(os){
+                for(var i=0;i<os.networkInterfaces().en0.length;i++){  
+                    if(os.networkInterfaces().en0[i].family=='IPv4'){  
+                        IPv4=os.networkInterfaces().en0[i].address;  
+                    }  
+                }  
+            }
+            pack_config.output.publicPath = `http://${IPv4}:${config.getPort()}/`;
             logger.debug('dev server start with webpack config: ');
             logger.debug(pack_config);
 
@@ -78,7 +88,7 @@ class Utils {
             if (sourcemap) {
                 pack_config.devtool = '#source-map';
             } else {
-                pack_config.devtool = '#eval';
+                pack_config.devtool = '#cheap-source-map';
             }
 
             pack_config.module.loaders.push({
