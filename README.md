@@ -1,184 +1,112 @@
-# kil
-kil is a tool based on nodejs and webpack, it helps improve the develop, test and release on web apps.
+# hey-cli
+webpack脚手架，hot-dev-server，build。
+主要使用package.json文件配置，支持vue1.0。  
+不需要理解webpack，只需要知道如何配置就可以使用。  
+支持es6，热替换，反向代理。  
 
-# Install
-*  install nodejs. see more [nodejs](https://nodejs.org)
-*  ~~git clone [kil](https://github.com/lovelypig5/kil.git) to your local workspace~~
+## 安装
 
-```node
-npm install -g kil
+```
+npm install -g killl
 ```
 
-# Usage
-  support init, develop, test, mock data and release cmds
+## 配置
 
-###init
-```javascript
-    kil init          // init a project with default
-    kil init -h       // get init help
-    kil init -m       // init mock module, this module will only work on development
-    kil init -t       // init test module, this module won't be built into bundle on release
-```
-init the project with kil:
-kil will init package.json. install npm dependencies and create js, css, img, less, test folders with default index.js and index.html asynchronized
-
-###dev
-```javascript
-    kil dev
-    kil dev -p 9001    // specify the port of dev server
-```
-after project init, kil dev helps open the [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html).
-support livereload, less compile, [data mock](https://github.com/nuysoft/Mock), [hot-module-replace](https://webpack.github.io/docs/hot-module-replacement.html), es6 is default support by [babel](https://babeljs.io/).
-
-###test
-```javascript
-    kil test                   // default run karma once and test with mocha framework
-    kil test -M | --no-mocha   // disable mocha
-    kil test -p                // enable phantomjs
-    kil test -s                // run karma as a server, CI unit tests
-```
-test is default support by phantomjs and mocha, [mocha](https://mochajs.org/) for unit tests and [phantomjs](http://phantomjs.org/) for page automation tests.
-reports will be export at reports folder at your workspace
-
-###release
-```javascript
-    kil release
-    kil release -s      // generate source map
-    kil release -C      // release without clean
-```
-minify your js, less to target js and css. package to a zip file for production.
-
-###help
-show usage and help information
-
-#Configuration
-kil accept two kinds of configuration, a key kil in package.json or a separate pack.js. pack.js is prior to package.json
-<h4><font color="red" size="">important:</font> if you want enable react, mock or copy files, package.json should be configured.</h4>
-
-#Global Value
-when server start with kil dev
-```javascript
-    var WEBPACK_DEBUG = true;
-    var process.env = 'development';
-```
-otherwise
-```javascript
-    var WEBPACK_DEBUG = false;
-    var process.env = 'production';
-```
-
-* package.json
+在package.json中添加属性：
 
 ```javascript
-    {
-        "kil": {
-            "port": 9000,          // port of dev server
-            "mock": true,          // enable local mock module
-            "react": true,         // enable react support
-            "html5Mode": false,    // enable html5 history api
-            "es7": false,          // support es7 async, object-rest-spread, flow-strip-types
-            "copy": ["img/*"],
-            "webpack": {
-                "publicPath": "/", // location of files serve at your server: localhost:8080/
-                "output": {
-                    "page/*.html": {
-                        "jsname": "page/index2",
-                        "commons": ["common"]
-                    },
-                    "*.html": {
-                        "commons": ["common"]
-                    }
-                },
-                "commonTrunk": {
-                    "common": ["jquery", "react", "react-dom"]
-                },
-                "global": {
-                    "React": "react",
-                    "ReactDOM": "react-dom",
-                    "$": "jquery"
-                },
-                "resolve": {
-                    "alias": {
-                        "spm-hammer": "hammerjs"
-                    }
-                },
-                "devServer": {
-                    "proxy": {
-                        "*": "http://localhost:3001"
-                    }
-                }
-            }
+"hey": {
+    //端口号
+    "port": 9002,
+
+    //webpack相关配置    
+    "webpack": {
+      //公开path
+      "publicPath": "/", 
+
+      "output": {
+        //输出哪些文件，主要是html，默认会加载和html文件名一样的js文件为入口。支持定义公用包。
+        "./*.html": {
+          "commons": [
+            "common"
+          ]
         }
-    }
-```
+      },
 
-* pack.js
+      //公共包定义，可以定义多个
+      "commonTrunk": {
+        "common": [
+          "jquery",
+          "vue",
+          "vuex",
+          "manba",
+          "./js/plugin/model/model",
+          "./js/common/log",
+          "./js/common/control",
+          "./js/common.js",
+          "./js/plugin/plugin.js",
+          "./js/plugin/uploader/qiniu",
+          "lightbox2",
+          "tooltipster",
+          "./js/directives_html",
+          "./js/directives",
+          "jsoneditor"
+        ]
+      },
 
-```javascript
-    /**
-     * modulePath is the location of kil node_modules
-     */
-    module.exports = (modulePath) => {
+      //定义假名
+      "resolve": {
+        "alias": {}
+      },
 
-        var path = require('path');
-        // var webpack = require(`${modulePath}/webpack`);
-        // var HtmlWebpackPlugin = require(`${modulePath}/html-webpack-plugin`);
+      //定义全局变量
+      "global": {
+        "Vue": "vue",
+        "$": "jquery",
+        "log": "./js/common/log",
+        "Common": "./js/common.js",
+        "Control": "./js/common/control",
+        "jQuery": "jquery",
+        "Model": "./js/plugin/model/model",
+        "Plugin": "./js/plugin/plugin.js",
+        "Qiniu": "./js/plugin/uploader/qiniu"
+      },
 
-        return {
-            // if single entry is used, bundle name will be named as main.js
-            entry: {
-                main: "./index",
-                // common: ['jquery']
-            },
-            // plugins example, default no more
-            plugins: [
-                // new webpack.ProvidePlugin({
-                //     $: "jquery",
-                //     jQuery: "jquery"
-                // }),
-                // new HtmlWebpackPlugin({
-                //     template: './index.html',
-                //     filename: './index.html',
-                //     chunks: ['main', 'common']
-                // }),
-                // new webpack.optimize.CommonsChunkPlugin({
-                //     name: "common"
-                // })
-            ],
-            module: {
-                loaders: []
-            },
-            externals: [],
-            devServer: {
-                // proxy: {
-                //     '*': 'http://localhost:3000'
-                // }
-            }
+      //定义反向代理服务器
+      "devServer": {
+        "proxy": {
+          //设定/api开头的url向定义的接口请求
+          "/api": {
+            "target": "http://yoda:9000"
+          }
         }
-    }
+      }
+    },
+
+    //未做关联引用的文件在build的时候复制到打包的文件夹中
+    "copy": [
+      "./images/**/*",
+      "./help/**/*",
+      "./template/**/*"
+    ]
+}
 ```
 
-* proxy
+反向代理可以配置pathRewrite，具体请前往[Document](https://webpack.github.io/docs/webpack-dev-server.html#rewriting-urls-of-proxy-request)
 
-  see [node-proxy](https://github.com/nodejitsu/node-http-proxy#options) for more options
 
-```javascript
-  devServer: {
-     proxy: {
-         '*': {
-            "target":"http://localhost:3000",
-            "toProxy":true,
-            // more see option
-        }
-     }
-  }
+## 执行
+
+启动webpack服务器
+
+```
+killl dev
 ```
 
-# Author
-* [out2man](http:/www.out2man.com)
+打包项目，支持hash文件，按需加载。
 
-# See also
-* [webpack](https://webpack.github.io/)
-* [mocha](https://mochajs.org/)
-* [phantomjs](http://phantomjs.org/)
-* [nodejs](https://nodejs.org)
+```
+killl build
+```
+
+本项目Forked from [lovelypig5/kil](https://github.com/lovelypig5/kil)
