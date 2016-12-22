@@ -1,4 +1,4 @@
-# hey-cli
+# killl
 webpack脚手架，hot-dev-server，build。
 主要使用package.json文件配置，支持vue1.0。  
 不需要理解webpack，只需要知道如何配置就可以使用。  
@@ -15,7 +15,7 @@ npm install -g killl
 在package.json中添加属性：
 
 ```javascript
-"hey": {
+"kil": {
     //端口号
     "port": 9002,
 
