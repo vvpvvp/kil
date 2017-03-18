@@ -10,7 +10,7 @@ var spawn = require('cross-spawn'),
 
 var webpack = require('webpack');
 // 加载编码转换模块  
-var iconv = require('iconv-lite'); 
+// var iconv = require('iconv-lite'); 
 
 module.exports = {
 

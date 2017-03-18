@@ -29,7 +29,7 @@ module.exports = {
             loader: "url?limit=2048&name=[path][name].[hash].[ext]"
         }, {
             test: /\.(png|jpe?g|gif)$/i,
-            loader: "url?limit=8192&name=[path][name].[hash].[ext]!img?minimize&progressive=true"
+            loader: "url?limit=8192&name=[path][name].[hash].[ext]"
         }, {
             test: /\.json$/,
             loaders: ['json']
