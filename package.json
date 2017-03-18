@@ -48,6 +48,7 @@
     "less": "^2.5.3",
     "less-loader": "^2.2.2",
     "log4js": "^0.6.31",
+    "postcss-calc": "^5.3.1",
     "postcss-loader": "^0.8.0",
     "react-transform-hmr": "^1.0.1",
     "rimraf": "^2.5.1",

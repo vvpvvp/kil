@@ -69,7 +69,7 @@ class Utils {
             // pack_config.output.publicPath = '/assets/';
 
             var IPv4 = "localhost";  
-            if(os){
+            if(os&&os.networkInterfaces().en0){
                 for(var i=0;i<os.networkInterfaces().en0.length;i++){  
                     if(os.networkInterfaces().en0[i].family=='IPv4'){  
                         IPv4=os.networkInterfaces().en0[i].address;  
@@ -82,13 +82,14 @@ class Utils {
 
             return pack_config;
         case 'release':
-            var sourcemap = !!args.sourcemap ? "?source-map" : "";
-
+            var sourcemap = "";
+            // var sourcemap = !!args.sourcemap ? "?source-map" : "";
+            // console.log(sourcemap);
             var pack_config = this.mergeConfig(args);
             if (sourcemap) {
                 pack_config.devtool = '#source-map';
             } else {
-                pack_config.devtool = '#cheap-source-map';
+                pack_config.devtool = '#cheap-module-source-map';
             }
 
             pack_config.module.loaders.push({
@@ -185,7 +186,7 @@ class Utils {
         } catch ( e ) {}
 
         if (!pack) {
-            logger.info("can't find pack.js, use webpack config from package.json or default.");
+            // logger.info("can't find pack.js, use webpack config from package.json or default.");
             var conf = sysCfg.webpack;
             pack = {
                 entry: conf.entry || 'main',

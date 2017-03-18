@@ -234,18 +234,18 @@ module.exports = {
             logger.info('build successfully. ');
 
 
-            var writeFile = function(file){
-                var str = "<script>console.log('"+args.headVersion+"')</script>";  
-                var arr = iconv.encode(str, 'utf8'); 
-                fs.appendFile(file, arr, function(err){  
-                    if(err)  
-                        console.log("fail " + err);
-                });  
-            }
-            let files = glob.sync(`${args.root}/index.html`);
-            files.forEach((file) => {
-                writeFile(file);
-            })
+            // var writeFile = function(file){
+            //     var str = "<script>console.log('"+args.headVersion+"')</script>";  
+            //     var arr = iconv.encode(str, 'utf8'); 
+            //     fs.appendFile(file, arr, function(err){  
+            //         if(err)  
+            //             console.log("fail " + err);
+            //     });  
+            // }
+            // let files = glob.sync(`${args.root}/index.html`);
+            // files.forEach((file) => {
+            //     writeFile(file);
+            // })
 
             if (after && typeof after === "function") {
                 after();
