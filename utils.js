@@ -195,7 +195,8 @@ class Utils {
                 resolve: conf.resolve,
                 output: {
                     publicPath: conf.publicPath
-                }
+                },
+                module: Object.assign({}, {loaders: []}, conf.module)
             }
         }
 

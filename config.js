@@ -154,6 +154,16 @@ class Config {
             pack.plugins.push(new webpack.ProvidePlugin(pack.global));
         }
 
+        if (pack.module && pack.module.noParse) {
+            pack.module.noParse = pack.module.noParse.map((value) => {
+                if (value.pattern) {
+                    return new RegExp(value.pattern);
+                } else {
+                    return value;
+                }
+            });
+        }
+
         conf.webpack = pack;
 
         return conf;
