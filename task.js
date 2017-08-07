@@ -134,10 +134,21 @@ module.exports = {
       serverCfg.historyApiFallback = true;
     }
 
+    serverCfg.disableHostCheck = true;
+    serverCfg.compress = true;
+    serverCfg.setup = function(app){
+      app.use(function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+        res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+        next();
+      });
+    }
+
     logger.debug('webpack dev server start with config: ');
     logger.debug(serverCfg);
     serverCfg.disableHostCheck = true;
-    new WebpackDevServer(compiler, serverCfg).listen(config.getPort(), '0.0.0.0', (err) => {
+    new WebpackDevServer(compiler, serverCfg).listen(config.getPort(), '::', (err) => {
       if (err) {
         logger.error(err);
         process.exit(1);
